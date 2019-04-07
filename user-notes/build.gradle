@@ -6,14 +6,39 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.user.notes'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+version = 'latest'
+
+jar {
+    baseName = 'user-note'
+    version = '0.0.1-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation ('org.springframework.boot:spring-boot-starter-web')
+	implementation ('org.springframework.boot:spring-boot-starter-security')
+	implementation ('org.springframework.boot:spring-boot-starter-tomcat')
+	implementation ('org.springframework.boot:spring-boot-starter-data-jpa')
+	implementation ('org.springframework.boot:spring-boot-starter-thymeleaf')
+	
+	implementation ('org.thymeleaf:thymeleaf-spring4:3.0.0.RELEASE')
+	implementation ('org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE')
+	
+	implementation ('javax.persistence:javax.persistence-api:2.2')
+	implementation ('org.postgresql:postgresql:42.2.5')
+	
+	implementation ('javax.servlet:jstl:1.2')
+	implementation ('org.apache.tomcat.embed:tomcat-embed-jasper:9.0.12')
+	
+	
+	compileOnly ('org.projectlombok:lombok:1.18.4')
+    annotationProcessor ('org.projectlombok:lombok:1.18.4')	
+	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

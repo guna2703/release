@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <meta charset="UTF-8" />
+      <title>Create account</title>
+      <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+   </head>
+   <body>
+	   <form name="registrationForm" method="POST" th:object="${accountForm}" th:action="@{/registration}">
+	           <table align = "center">
+	                       
+	               <tr>
+	                   <td>Full Name:</td>
+	                   <td><input type="text" size=25 th:name = "fullName"></td>
+	               </tr>
+	           
+	               <tr>
+	                   <td>UserName:</td>
+	                   <td><input type="text" size=25 th:name="username"></td>
+	               </tr>
+	               
+	               <tr>
+	                   <td>Password:</td>
+	                   <td><input type="password" size=25 th:name="password"></td>
+	               </tr>
+	               
+	               <tr>
+	                   <td>Confirm Password:</td>
+	                   <td><input type="password" size=25 th:name="confirmPassword"></td>
+	               </tr>
+	               
+	               <tr>
+	                   <td>Date Of Birth:</td>
+	                   <td><input type="date" size=25 th:name="dateOfBirth"></td>
+	               </tr>
+	               
+	               <tr>
+	                   <td>Email Id:</td>
+	                   <td><input type="email" size=25 th:name="emailId"></td>
+	               </tr>
+	               
+	               <tr>
+	                   <td>Mobile Number:</td>
+	                   <td><input type="text" size=25 th:name="mobileNumber"></td>
+	               </tr>
+	           
+	               <tr>
+	                   <td ><input type="Reset"></td>
+	                   <td><input type="submit" value="Create"></td>
+	               </tr>
+	           </table>
+	   </form>
+	   <br>
+	   <form th:action="@{/logout}" method="POST">
+            <input type="submit" value="Logout"/>
+        </form>
+   </body>
+    
+</html>

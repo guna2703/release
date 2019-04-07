@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   <head>
+      <meta charset="UTF-8" />
+      <title>Welcome</title>
+      <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+   </head>
+   <body>
+   <!--
+    <div th:if="${#authorization.expression('isAuthenticated()')}">
+        <h1 th:inline="text">Hello, <span th:text="${#authentication.name}"></span>!</h1>
+    </div>
+   -->
+      <h1>Welcome User</h1>
+      <h2 th:utext="${message}">..!..</h2>
+       <div sec:authorize="isAuthenticated()">
+            This content is only shown to authenticated users.
+       </div>
+      <!--  
+       
+         In Thymeleaf the equivalent of
+         JSP's ${pageContext.request.contextPath}/edit.html
+         would be @{/edit.html}
+          
+         -->
+      <div>
+         <table border="1">
+            <tr>
+               <th>Username</th>
+               <th>Password</th>
+            </tr>
+            <tr>
+               <td th:text="${account.username}">...</td>
+               <td th:text="${account.password}">...</td>
+            </tr>
+         </table>
+      </div>
+          
+        <form th:action="@{/logout}" method="POST">
+            <input type="submit" name="Logout"/>
+        </form>
+        <!-- <span th:text="${#authentication.getPrincipal().getUsername()}"></span> -->
+        Logged user: <span sec:authentication="name">Bob</span>
+   </body>
+    
+</html>

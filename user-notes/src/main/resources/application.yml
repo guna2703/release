@@ -1,0 +1,26 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+spring.datasource:
+    driverClassName: org.postgresql.Driver
+    url: "jdbc:postgresql://${USER_NOTE_DB_HOST:localhost}:${USER_NOTE_DB_PORT:5432}/${USER_NOTE_DB:usernotes}?currentSchema=${USER_NOTE_DB_SCHEMA:public}"
+    username: ${USER_NOTE_DB_USER:noteuser}
+    password: ${USER_NOTE_DB_PASSWORD:password}
+spring.jpa:
+        database: PostgreSQL
+        show-sql: false
+        hibernate:
+            ddl-auto: update # validate | update | create | create-drop
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
+            show_sql: false
+            format_sql: true
+        properties:
+          hibernate:
+            temp:
+              use_jdbc_metadata_defaults: false
+            enable_lazy_load_no_trans: true
+            event:
+              merge:
+                entity_copy_observer: allow
