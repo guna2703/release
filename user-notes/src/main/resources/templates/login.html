@@ -32,12 +32,13 @@
 					<td><input type="submit" value="Login"></td>
 				</tr>
 			
-			</table>
+			</table>		
+		</form>
+		    <a href="/registration">Registration</a>
             <div th:if="${errorMessage}">
                 <div class="alert alert-info">
                     <h2 th:utext="${errorMessage}">..!..</h2>
                 </div>
-            </div>			
-		</form>
+            </div>  
 	</body>
 </html>

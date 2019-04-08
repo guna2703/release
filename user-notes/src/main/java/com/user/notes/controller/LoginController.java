@@ -4,9 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,9 +42,8 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(value="login.html", method = RequestMethod.POST)
-    public String showWelcomePage(Model model, @ModelAttribute("loginForm") UserAccount account,
-            Authentication authentication){
+    @PostMapping(value="login.html")
+    public String showWelcomePage(Model model, @ModelAttribute("loginForm") UserAccount account) {
 
         boolean isValidUser = service.validateUser(account.getUsername(), account.getPassword());
 
@@ -72,6 +68,7 @@ public class LoginController {
     @PostMapping("/registration")
     public String registration(Model model, @ModelAttribute("accountForm") UserAccount userAccount) {
 
+        log.info("object: {}", userAccount.toString());
         log.info("Register the user. name: {}", userAccount.getUsername());
 
         if (!(userAccount.getPassword().equals(userAccount.getConfirmPassword()))) {
@@ -89,21 +86,12 @@ public class LoginController {
         UserAccount createdAccount = userAccountService.save(userAccount);
         model.addAttribute("name", createdAccount.getUsername());
 
-//        securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
-
         return "login";
     }
 
     @RequestMapping(value="/logout", method = RequestMethod.POST)
     public String logout(HttpServletRequest request, HttpServletResponse response){
 
-//        log.info("principal: {}", principal.getName());
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){
-            log.info("auth is not null");
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-//        log.info("Session: {}", request.getUserPrincipal().getName());
         request.getSession().invalidate();
         return "redirect:/login?logout";
     }
