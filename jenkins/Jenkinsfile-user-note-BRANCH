@@ -1,0 +1,90 @@
+#!/usr/bin/env groovy
+import java.text.SimpleDateFormat
+def version = ""
+def serviceName = "user-notes"
+def serviceDirectory = "user-notes"
+def registry = "docker.io/9698629519/demo-registry"
+
+pipeline {
+  agent none
+  stages {
+    stage("Create versioning") {
+      agent any
+      steps {
+        script {
+          def dateFormat = new SimpleDateFormat("yyyyMMdd")
+          def date = new Date()
+          def format = dateFormat.format(date)
+          version = VersionNumber (versionNumberString: '${BUILDS_TODAY}', versionPrefix: "${serviceName}-b${format}.")
+        }
+      }
+    }
+
+    stage('Quality Analysis') {
+      parallel {
+        stage ("Build") {
+          agent any
+          steps {
+            echo "Build"
+            echo "Build Number ${version}"
+            dir(serviceDirectory) {
+              sh "./gradlew clean build -x test"
+            }
+          }
+        }
+
+        stage ("Unit Test") {
+          agent any
+          steps {
+            echo "Run unit tests - ${version}"
+            dir(serviceDirectory) {
+              sh "./gradlew test"
+            }
+          }
+          post {
+            always {
+              script {
+                try {
+                  echo "Capture test results - ${version}"
+                  junit "**/build/test-results/**/*.xml"
+                } catch (err) {
+                  echo "No test results found"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    stage ("Publish") {
+      agent any
+      steps {
+        echo "Docker - build, tag & publish"
+        sh "./gradlew clean"
+        dir(serviceDirectory) {
+          sh "./gradlew clean build -x test"
+          sh "docker build -t ${registry}/${serviceName}:${version} ."
+        }
+        sh "docker rmi ${registry}/${serviceName}:${version}"
+      }
+    }
+
+    stage ("Deploy") {
+      agent any
+      environment {
+        USER_NOTE_VERSION = "${version}"
+      }
+      steps {
+        dir(serviceDirectory) {
+          echo "Deploy Release-Notes - ${version}"
+          sh 'sh build.sh'
+          sh 'cp docker-compose.yml /home/ec2-user/user-notes/'
+        }
+        dir('/home/ec2-user/user-notes/') {
+          sh "docker-compose.yml up -d"
+        }
+      }
+    }
+  }
+}

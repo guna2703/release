@@ -8,7 +8,7 @@ pg:
     - POSTGRES_PASSWORD=dbpassword
 
 user-notes:
-  image: 9698629519/demo-registry:user-notes-b20190408.1
+  image: 9698629519/demo-registry:{{ .Env.USER_NOTE_VERSION }}
   ports:
     - "8080:8080"
   environment:
